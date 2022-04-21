@@ -47,6 +47,10 @@ ci:	lint test ## Lint code then run tests
 up: ## Run application
 	$(VENV)/bin/uvicorn --reload --factory app.app:create_app --host $(HOST) --port $(PORT)
 
+.PHONY: client
+client: ## Run client
+	$(VENV)/bin/python -m client.client  --user_id annet
+
 .PHONY: docker-build
 docker-build: ## Build docker image
 	docker-compose build

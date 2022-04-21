@@ -1,10 +1,8 @@
 # Image Resizer
-API that allows you to scale images.
+...
 
 ### Features
-- Using Redis to store images and tasks
-- Using python-rq for task queue
-- Three docker containers for application, Redis and workers
+- ...
 
 
 ### Endpoints

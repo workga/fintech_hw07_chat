@@ -8,29 +8,17 @@ services:
     ports:
       - "6379:6379"
     volumes:
-    - ./redis.conf:/etc/redis/redis.conf
+    - .docker/redis/redis.conf:/etc/redis/redis.conf
     command: ["redis-server", "/etc/redis/redis.conf"]
 
   app:
+    container_name: app
     build:
       context: .
-      dockerfile: app.dockerfile
-    container_name: app
+      dockerfile: ./docker/app/app.dockerfile
 
     ports:
       - "8000:8000"
-
-    depends_on:
-      - redis
-
-  workers:
-    build:
-      context: .
-      dockerfile: workers.dockerfile
-    container_name: workers
-
-    ports:
-      - "8080:8080"
 
     depends_on:
       - redis
