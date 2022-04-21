@@ -116,7 +116,7 @@ celerybeat.pid
 # Environments
 .env
 !app/.env
-!app/resizer/.env
+!app/chat/.env
 .venv
 env/
 venv/
