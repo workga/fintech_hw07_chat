@@ -1,9 +1,8 @@
 import logging
-from logging.handlers import QueueHandler, QueueListener
 import queue
+from logging.handlers import QueueHandler, QueueListener
 
 from app.settings import app_settings
-
 
 stream_handler = logging.StreamHandler()
 stream_handler.setFormatter(
@@ -18,7 +17,7 @@ logger.addHandler(stream_handler)
 logger.setLevel(app_settings.logger_level)
 
 
-logger_queue = queue.SimpleQueue()
+logger_queue: queue.SimpleQueue[object] = queue.SimpleQueue()
 queue_handler = QueueHandler(logger_queue)
 
 root_logger = logging.getLogger()

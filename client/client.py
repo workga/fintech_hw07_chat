@@ -1,31 +1,34 @@
 import asyncio
+
+import requests
 import typer
 import websockets
 from websockets.exceptions import WebSocketException
-import requests
-from requests.exceptions import ConnectionError
+from websockets.legacy.client import WebSocketClientProtocol as WebSocket
 
 from client.settings import client_settings
 
 
-def echo_history(user_id: str):
-    hist_url = f'http://{client_settings.host}:{client_settings.port}/chat/{user_id}/history'
+def echo_history(user_id: str) -> None:
+    hist_url = (
+        f'http://{client_settings.host}:{client_settings.port}/chat/{user_id}/history'
+    )
 
     response = requests.get(hist_url)
-    
+
     if response.status_code != 200:
         return
-    
+
     history_list = response.json()
     for message in history_list:
         typer.echo(message)
 
 
-async def async_input():
+async def async_input() -> str:
     return await asyncio.get_event_loop().run_in_executor(None, input)
 
 
-async def send(ws):    
+async def send(ws: WebSocket) -> None:
     try:
         while message := await async_input():
             await ws.send(message)
@@ -35,7 +38,7 @@ async def send(ws):
         return
 
 
-async def receive(ws):
+async def receive(ws: WebSocket) -> None:
     try:
         async for message in ws:
             typer.echo(message)
@@ -44,12 +47,15 @@ async def receive(ws):
         typer.echo(f'ERROR: {error}')
 
 
-async def client(user_id: str):
+async def client(user_id: str) -> None:
     try:
         ws_url = f'ws://{client_settings.host}:{client_settings.port}/chat/{user_id}/ws'
         typer.echo(f'INFO: Connecting to {ws_url}')
-        
-        async with websockets.connect(ws_url) as ws:
+
+        # Because pylint doesn't know about connect method
+        async with websockets.connect(  # type: ignore[attr-defined]  # pylint: disable=no-member
+            ws_url
+        ) as ws:
             typer.echo('INFO: Connected')
 
             echo_history(user_id)
@@ -68,12 +74,11 @@ async def client(user_id: str):
                 task.cancel()
 
             typer.echo('INFO: Disconnected')
-    except (ConnectionError, ConnectionRefusedError):
-        typer.echo(f'ERROR: Connection error')
-    
+    except (requests.exceptions.ConnectionError, ConnectionRefusedError):
+        typer.echo('ERROR: Connection error')
 
 
-def main(user_id: str):
+def main(user_id: str) -> None:
     asyncio.run(client(user_id))
 
 

@@ -49,7 +49,7 @@ up: ## Run application
 
 .PHONY: client
 client: ## Run client
-	$(VENV)/bin/python -m client.client  --user_id annet
+	$(VENV)/bin/python -m client.client username
 
 .PHONY: docker-build
 docker-build: ## Build docker image

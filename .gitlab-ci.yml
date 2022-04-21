@@ -23,10 +23,10 @@ stages:
 lint:
   stage: lint
   script:
-    - flake8 --jobs 4 --statistics --show-source tests app
-    - pylint --jobs 4 --rcfile=setup.cfg tests app
-    - mypy tests app
-    - black --skip-string-normalization --check tests app
+    - flake8 --jobs 4 --statistics --show-source tests app client
+    - pylint --jobs 4 --rcfile=setup.cfg tests app client
+    - mypy tests app client
+    - black --skip-string-normalization --check tests app client
 
 test:
   stage: test
